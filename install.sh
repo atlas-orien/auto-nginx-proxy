@@ -147,7 +147,6 @@ request_certificate() {
   sudo certbot certonly \
     --dns-cloudflare \
     --dns-cloudflare-credentials "$CLOUDFLARE_CREDENTIALS" \
-    --dns-cloudflare-propagation-seconds 60 \
     --non-interactive \
     --agree-tos \
     --email "$EMAIL" \
