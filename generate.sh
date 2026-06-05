@@ -16,6 +16,8 @@ Examples:
 
 Config format:
   domain = example.com
+  email = admin@example.com
+  cloudflare_api_token = replace-me
 
   taskmate -> 192.0.2.10:29202
   abc -> 127.0.0.1:8080
@@ -143,6 +145,10 @@ BEGIN {
     if (key == "domain") {
       require_domain(value, "domain")
       base_domain = value
+      next
+    }
+
+    if (key == "email" || key == "cloudflare_api_token") {
       next
     }
 

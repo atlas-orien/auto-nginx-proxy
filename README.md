@@ -38,6 +38,8 @@ Edit `config/proxies.conf`:
 
 ```conf
 domain = example.com
+email = admin@example.com
+cloudflare_api_token = replace-me
 
 taskmate -> 192.0.2.10:29202
 abc -> 127.0.0.1:8080
@@ -101,10 +103,16 @@ Custom paths:
 
 ## Install
 
-Install nginx, enable it on boot, replace `/etc/nginx/nginx.conf` with `templates/nginx.conf`, check config, and start nginx:
+Install nginx, install certbot with the Cloudflare DNS plugin, write Cloudflare credentials, request a Let’s Encrypt certificate for `domain` and `*.domain`, enable nginx on boot, replace `/etc/nginx/nginx.conf` with `templates/nginx.conf`, check config, and start nginx:
 
 ```sh
 ./install.sh
+```
+
+The Cloudflare token is written to:
+
+```sh
+/etc/letsencrypt/cloudflare.ini
 ```
 
 The old main config is backed up as:
