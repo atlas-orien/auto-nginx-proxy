@@ -148,7 +148,7 @@ BEGIN {
       next
     }
 
-    if (key == "email" || key == "cloudflare_api_token") {
+    if (key == "email" || key == "cloudflare_api_token" || key == "tencentcloud_secret_id" || key == "tencentcloud_secret_key") {
       next
     }
 

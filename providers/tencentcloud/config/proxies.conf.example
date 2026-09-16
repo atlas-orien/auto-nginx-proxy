@@ -1,0 +1,15 @@
+# Copy this file to proxies.conf before running the Tencent Cloud installer.
+# Keep proxies.conf private: it contains a Tencent Cloud API secret.
+
+# Base domain.
+domain = example.com
+
+# Email for Let's Encrypt registration and recovery notices.
+email = admin@example.com
+
+# Tencent Cloud CAM API key. The principal needs DNSPod write access for this domain.
+tencentcloud_secret_id = replace-me
+tencentcloud_secret_key = replace-me
+
+# Proxy mappings: subdomain -> ip:port
+app -> 127.0.0.1:8080

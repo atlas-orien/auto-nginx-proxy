@@ -101,7 +101,7 @@ Custom paths:
 ./sync.sh dist /etc/nginx/sites-enabled
 ```
 
-## Install
+## Install With Cloudflare DNS
 
 Install nginx, install certbot with the Cloudflare DNS plugin, write Cloudflare credentials, request a Let’s Encrypt certificate for `domain` and `*.domain`, enable nginx on boot, replace `/etc/nginx/nginx.conf` with `templates/nginx.conf`, check config, and start nginx:
 
@@ -120,6 +120,30 @@ The old main config is backed up as:
 ```sh
 /etc/nginx/nginx.conf.bak.YYYYMMDDHHMMSS
 ```
+
+## Install With Tencent Cloud DNSPod
+
+Cloudflare and Tencent Cloud DNSPod use different APIs for the DNS-01 challenge. The existing root `install.sh` remains the Cloudflare installer; Tencent Cloud has an independent installer and configuration directory.
+
+Create a Tencent Cloud CAM API key with DNSPod write permission, then create a private provider configuration:
+
+```sh
+cp providers/tencentcloud/config/proxies.conf.example providers/tencentcloud/config/proxies.conf
+# Edit providers/tencentcloud/config/proxies.conf
+./providers/tencentcloud/install.sh
+```
+
+The Tencent Cloud installer creates an isolated Certbot environment at `/opt/auto-nginx-proxy-certbot`, writes credentials to `/etc/letsencrypt/tencentcloud.ini`, requests `domain` and `*.domain`, and enables a daily systemd renewal timer. It waits 120 seconds for DNSPod TXT propagation before validation.
+
+Generate and sync proxy files from the provider-specific mapping file:
+
+```sh
+./generate.sh providers/tencentcloud/config/proxies.conf
+./sync.sh
+./reload.sh
+```
+
+`providers/tencentcloud/config/proxies.conf` is ignored by Git because it contains the Tencent Cloud SecretKey. Do not put either provider's production credentials in a committed file.
 
 ## Reload
 

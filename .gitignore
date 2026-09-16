@@ -1,4 +1,5 @@
 /dist/
 /target/
+/providers/tencentcloud/config/proxies.conf
 
 .DS_Store
