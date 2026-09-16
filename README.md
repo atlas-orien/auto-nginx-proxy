@@ -40,6 +40,8 @@ Edit `config/proxies.conf`:
 domain = example.com
 email = admin@example.com
 cloudflare_api_token = replace-me
+tencentcloud_secret_id = replace-me
+tencentcloud_secret_key = replace-me
 
 taskmate -> 192.0.2.10:29202
 abc -> 127.0.0.1:8080
@@ -123,27 +125,32 @@ The old main config is backed up as:
 
 ## Install With Tencent Cloud DNSPod
 
-Cloudflare and Tencent Cloud DNSPod use different APIs for the DNS-01 challenge. The existing root `install.sh` remains the Cloudflare installer; Tencent Cloud has an independent installer and configuration directory.
+Cloudflare and Tencent Cloud DNSPod use different APIs for the DNS-01 challenge. Both installers use the same `config/proxies.conf` file, but read only their own credentials.
 
-Create a Tencent Cloud CAM API key with DNSPod write permission, then create a private provider configuration:
+Create a Tencent Cloud CAM API key with DNSPod write permission. Add its values to `config/proxies.conf`:
+
+```conf
+tencentcloud_secret_id = your-secret-id
+tencentcloud_secret_key = your-secret-key
+```
+
+Then run:
 
 ```sh
-cp providers/tencentcloud/config/proxies.conf.example providers/tencentcloud/config/proxies.conf
-# Edit providers/tencentcloud/config/proxies.conf
 ./providers/tencentcloud/install.sh
 ```
 
 The Tencent Cloud installer creates an isolated Certbot environment at `/opt/auto-nginx-proxy-certbot`, writes credentials to `/etc/letsencrypt/tencentcloud.ini`, requests `domain` and `*.domain`, and enables a daily systemd renewal timer. It waits 120 seconds for DNSPod TXT propagation before validation.
 
-Generate and sync proxy files from the provider-specific mapping file:
+Generate and sync proxy files as usual:
 
 ```sh
-./generate.sh providers/tencentcloud/config/proxies.conf
+./generate.sh
 ./sync.sh
 ./reload.sh
 ```
 
-`providers/tencentcloud/config/proxies.conf` is ignored by Git because it contains the Tencent Cloud SecretKey. Do not put either provider's production credentials in a committed file.
+Do not commit production credentials. For a private configuration file outside this repository, pass its path as the first argument to either installer and to `generate.sh`.
 
 ## Reload
 

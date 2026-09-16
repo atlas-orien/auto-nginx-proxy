@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
-CONFIG_FILE="${1:-$SCRIPT_DIR/config/proxies.conf}"
+CONFIG_FILE="${1:-$PROJECT_ROOT/config/proxies.conf}"
 MAIN_TEMPLATE="${2:-$PROJECT_ROOT/templates/nginx.conf}"
 NGINX_CONF="${3:-/etc/nginx/nginx.conf}"
 CERTBOT_VENV="/opt/auto-nginx-proxy-certbot"
@@ -15,16 +15,16 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
 Usage:
   ./providers/tencentcloud/install.sh [config-file] [main-nginx-template] [nginx-conf-path]
 
-Before first use:
-  cp providers/tencentcloud/config/proxies.conf.example providers/tencentcloud/config/proxies.conf
-  # Edit providers/tencentcloud/config/proxies.conf with the domain, mappings, and CAM API key.
+The default configuration is config/proxies.conf. Add:
+  tencentcloud_secret_id = your-secret-id
+  tencentcloud_secret_key = your-secret-key
 EOF
   exit 0
 fi
 
 if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "error: config file not found: $CONFIG_FILE" >&2
-  echo "hint: copy $SCRIPT_DIR/config/proxies.conf.example to $SCRIPT_DIR/config/proxies.conf" >&2
+  echo "hint: edit $PROJECT_ROOT/config/proxies.conf or pass a config-file path" >&2
   exit 1
 fi
 
